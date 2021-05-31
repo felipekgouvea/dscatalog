@@ -37,7 +37,7 @@ public class ProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public ProductDTO findById(Long id){				
+	public ProductDTO findById(Long id){
 		Optional<Product> obj = productRepository.findById(id);
 		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Categoria não exite!"));
 		return new ProductDTO(entity, entity.getCategories());
