@@ -46,7 +46,7 @@ public class ControllerExceptionHandler {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ValidationError> database (MethodArgumentNotValidException e, HttpServletRequest request){
+	public ResponseEntity<ValidationError> validation (MethodArgumentNotValidException e, HttpServletRequest request){
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		ValidationError err = new ValidationError();
 		
