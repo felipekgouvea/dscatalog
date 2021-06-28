@@ -29,11 +29,15 @@ public class ProductController {
 	@Autowired
 	ProductService productService;
 	
-//	@GetMapping
-//	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){		
-//		Page<ProductDTO> list = productService.findAllPaged(pageable);
-//		return ResponseEntity.ok().body(list);
-//	}
+	@GetMapping
+	public ResponseEntity<Page<ProductDTO>> findAll(
+			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+			@RequestParam(value = "name", defaultValue = "") String name,
+			Pageable pageable){	
+		
+		Page<ProductDTO> list = productService.findAllPaged(categoryId, name.trim() , pageable);
+		return ResponseEntity.ok().body(list);
+	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
@@ -59,15 +63,5 @@ public class ProductController {
 	public ResponseEntity<Void> delete(@PathVariable Long id){
 		productService.delete(id);
 		return ResponseEntity.noContent().build();
-	}
-	
-	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAll(
-			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
-			@RequestParam(value = "name", defaultValue = "") String name,
-			Pageable pageable){	
-		
-		Page<ProductDTO> list = productService.findAllPaged(categoryId, name.trim() , pageable);
-		return ResponseEntity.ok().body(list);
 	}
 }
