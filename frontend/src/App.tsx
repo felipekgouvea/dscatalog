@@ -1,9 +1,12 @@
 import './assets/styles/custom.scss';
 import './App.css';
+import Routes from './Routes';
 
 function App() {
   return (
-    <h1 className="btn btn-primary">Meu app web.</h1>
+    <div className="main">
+      <Routes/>
+    </div>
   );
 }
 
