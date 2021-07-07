@@ -21,6 +21,7 @@
     margin-right: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    color: #FFF;
 }
 
 @media(min-width: 576px){
