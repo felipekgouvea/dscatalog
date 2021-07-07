@@ -30,11 +30,7 @@ const ProductDetails = () => {
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Accusantium aut optio odio eveniet dolorum vitae ducimus
-                blanditiis? Beatae repellat molestias, nobis maiores eveniet
-                aliquid harum nihil optio quia modi vel. Alias deleniti
-                assumenda voluptatem veniam aliquid ullam aspernatur aut ratione
-                nam asperiores et dolorum consectetur placeat id iusto illum
-                porro animi eos fuga, doloremque cupiditate reprehenderit.
+                blanditiis? Beatae repellat molestias.
               </p>
             </div>
           </div>
