@@ -41,7 +41,10 @@ const Catalog = () => {
       </div>
       <div className="row">
         {isLoading ? (
-          <CardLoader/>
+          <>
+            <CardLoader />            
+          </>
+
         ) : (
           page?.content.map((product) => (
             <div className="col-sm-6 col-lg-4 col-xl-3" key={product.id}>
@@ -52,9 +55,7 @@ const Catalog = () => {
           ))
         )}
       </div>
-      <div className="row">
-        <Pagination />
-      </div>
+      <div className="row">{page ? <Pagination /> : ''}</div>
     </div>
   );
 };
