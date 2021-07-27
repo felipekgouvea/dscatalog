@@ -22,7 +22,7 @@ const NavBar = () => {
               <p>Usuários</p>
             </NavLink>
           </li>
-        )}
+        )}  
       </ul>
     </nav>
   );
