@@ -4,11 +4,18 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Product } from '../../../../types/product';
 import { requestBackend } from '../../../../util/requests';
+import Select from 'react-select';
 import './styles.css';
 
 type UrlParams = {
   productId: string;
 };
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
 
 const Form = () => {
   const history = useHistory();
@@ -85,6 +92,14 @@ const Form = () => {
                   {errors.name?.message}
                 </div>
               </div>
+
+              <div className="product-crud-input product-crud-others-inputs-container">
+                <Select 
+                options={options}
+                isMulti
+                classNamePrefix="product-crud-select" />
+              </div>
+
               <div className="">
                 <input
                   {...register('price', {
