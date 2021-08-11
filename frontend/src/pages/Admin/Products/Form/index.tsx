@@ -1,33 +1,38 @@
 import { AxiosRequestConfig } from 'axios';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Product } from '../../../../types/product';
 import { requestBackend } from '../../../../util/requests';
 import Select from 'react-select';
 import './styles.css';
+import { useState } from 'react';
+import { Category } from '../../../../types/category';
+import CurrencyInput from 'react-currency-input-field';
 
 type UrlParams = {
   productId: string;
 };
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
-
 const Form = () => {
   const history = useHistory();
   const { productId } = useParams<UrlParams>();
   const isEditing = productId !== 'create';
+  const [selectCategories, setSelectCategories] = useState<Category[]>([]);
 
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm<Product>();
+
+  useEffect(() => {
+    requestBackend({ url: '/categories' }).then((response) => {
+      setSelectCategories(response.data.content);
+    });
+  }, []);
 
   useEffect(() => {
     if (isEditing) {
@@ -46,10 +51,7 @@ const Form = () => {
   const onSubmit = (formData: Product) => {
     const data = {
       ...formData,
-      imgUrl: isEditing
-        ? formData.imgUrl
-        : 'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg',
-      categories: isEditing ? formData.categories : [{ id: 1, name: '' }],
+      price: String(formData.price).replace(',', '.'),
     };
 
     const config: AxiosRequestConfig = {
@@ -94,33 +96,78 @@ const Form = () => {
               </div>
 
               <div className="product-crud-input product-crud-others-inputs-container">
-                <Select 
-                options={options}
-                isMulti
-                classNamePrefix="product-crud-select" />
+                <Controller
+                  name="categories"
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={selectCategories}
+                      isMulti
+                      classNamePrefix="product-crud-select"
+                      getOptionLabel={(category: Category) => category.name}
+                      getOptionValue={(category: Category) =>
+                        String(category.id)
+                      }
+                    />
+                  )}
+                />
+                {errors.categories && (
+                  <div className="invalid-feedback d-block">
+                    Campo Obrigatório
+                  </div>
+                )}
+              </div>
+
+              <div className="product-crud-input product-crud-others-inputs-container">
+                <Controller
+                  name="price"
+                  rules={{ required: 'Campo Obrigatório' }}
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      placeholder="Preço"
+                      className={`form-control base-input ${
+                        errors.name ? 'is-invalid' : ''
+                      }`}
+                      disableGroupSeparators={true}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
+                  )}
+                />
+
+                <div className="invalid-feedback d-block">
+                  {errors.name?.message}
+                </div>
               </div>
 
               <div className="">
                 <input
-                  {...register('price', {
-                    required: 'Campo obrigatório',
+                  {...register('imgUrl', {
+                    required: 'Campo Obrigatório',
+                    pattern: {
+                      value: /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm,
+                      message: 'Deve ser uma URL válida',
+                    },
                   })}
                   type="text"
                   className={`form-control base-input ${
                     errors.name ? 'is-invalid' : ''
                   }`}
-                  placeholder="Preço"
-                  name="price"
+                  placeholder="Imagem do Produto"
+                  name="imgUrl"
                 />
                 <div className="invalid-feedback d-block">
-                  {errors.name?.message}
+                  {errors.imgUrl?.message}
                 </div>
               </div>
             </div>
             <div className="col-lg-6">
               <div>
                 <textarea
-                  rows={10}
+                  rows={11}
                   {...register('description', {
                     required: 'Campo obrigatório',
                   })}
