@@ -1,33 +1,46 @@
 import { AxiosRequestConfig } from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Pagination from '../../../../components/Pagination';
 import { Product } from '../../../../types/product';
 import { SpringPage } from '../../../../types/vendor/spring';
 import { requestBackend } from '../../../../util/requests';
 import ProductCrudCard from '../ProductCrudCard';
 import './styles.css';
 
+type ControlComponentsData = {
+  activePage: number;
+};
+
 const List = () => {
   const [page, setPage] = useState<SpringPage<Product>>();
+  const [controlComponentsData, setControlComponentsData] =
+    useState<ControlComponentsData>({
+      activePage: 0,
+    });
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  const handlePageChange = (pageNumber: number) => {
+    setControlComponentsData({ activePage: pageNumber });
+  };
 
-  const getProducts = () => {
+  const getProducts = useCallback(() => {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url: '/products',
       params: {
-        page: 0,
-        size: 32,
+        page: controlComponentsData.activePage,
+        size: 3,
       },
     };
 
     requestBackend(config).then((response) => {
       setPage(response.data);
     });
-  };
+  }, [controlComponentsData]);
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
 
   return (
     <div className="product-crud-container">
@@ -45,11 +58,16 @@ const List = () => {
             <ProductCrudCard
               product={product}
               key={product.id}
-              onDelete={() => getProducts()}
+              onDelete={getProducts}
             />
           </div>
         ))}
       </div>
+      <Pagination
+        pageCount={page ? page.totalPages : 0}
+        range={3}
+        onChange={handlePageChange}
+      />
     </div>
   );
 };
