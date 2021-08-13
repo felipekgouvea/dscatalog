@@ -4,12 +4,13 @@ import { ReactComponent as ArrowIcon } from '../../assets/images/arrow.svg';
 import './styles.css';
 
 type Props = {
+  forcePage?: number;
   pageCount: number;
   range: number;
   onChange?: (pageNumber: number) => void;
 };
 
-const Pagination = ({ pageCount, range, onChange }: Props) => {
+const Pagination = ({ pageCount, range, onChange, forcePage }: Props) => {
   return (
     <ReactPaginate
       pageCount={pageCount}
@@ -20,10 +21,19 @@ const Pagination = ({ pageCount, range, onChange }: Props) => {
       breakClassName="pagintion-item"
       previousClassName="arrow-previous"
       nextClassName="arrow-next"
+      forcePage={forcePage}
       activeLinkClassName="pagintion-link-active"
       disabledClassName="arrow-inactive"
-      previousLabel={<div className="pagination-arrow-container"><ArrowIcon /></div>}
-      nextLabel={<div className="pagination-arrow-container"><ArrowIcon /></div>}
+      previousLabel={
+        <div className="pagination-arrow-container">
+          <ArrowIcon />
+        </div>
+      }
+      nextLabel={
+        <div className="pagination-arrow-container">
+          <ArrowIcon />
+        </div>
+      }
       onPageChange={(items) => (onChange ? onChange(items.selected) : {})}
     />
   );
